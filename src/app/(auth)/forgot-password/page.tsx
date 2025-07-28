@@ -23,7 +23,7 @@ export default function ForgotPassword() {
 
 		if (!validationResult.success) {
 			const errors: { email?: string } = {};
-			validationResult.error.errors.forEach(err => {
+			validationResult.error.issues.forEach(err => {
 				if (err.path.includes('email')) errors.email = err.message;
 			});
 			setFormErrors(errors);

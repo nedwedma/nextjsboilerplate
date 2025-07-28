@@ -29,7 +29,7 @@ export default function SignIn() {
 
 		if (!validationResult.success) {
 			const errors: { email?: string; password?: string } = {};
-			validationResult.error.errors.forEach(err => {
+			validationResult.error.issues.forEach(err => {
 				if (err.path.includes('email')) errors.email = err.message;
 				if (err.path.includes('password')) errors.password = err.message;
 			});

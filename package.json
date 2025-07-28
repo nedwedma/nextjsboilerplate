@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.8.0",
+    "@aws-sdk/client-s3": "^3.850.0",
+    "@aws-sdk/s3-request-presigner": "^3.850.0",
+    "@fal-ai/client": "^1.6.1",
     "@headlessui/react": "^2.2.1",
     "@heroicons/react": "^2.2.0",
     "@prisma/client": "^6.4.1",

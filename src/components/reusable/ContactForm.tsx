@@ -30,7 +30,7 @@ export default function ContactForm() {
 
     if (!validationResult.success) {
       const errors: Partial<ContactFormData> = {};
-      validationResult.error.errors.forEach(err => {
+      validationResult.error.issues.forEach(err => {
         const field = err.path[0] as keyof ContactFormData;
         errors[field] = err.message;
       });

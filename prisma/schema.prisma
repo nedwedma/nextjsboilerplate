@@ -47,6 +47,7 @@ model User {
   accounts      Account[]
   
   sessions      Session[]
+  uploadedImages Image[]
 
   @@map("user")
 }
@@ -90,6 +91,24 @@ model Contact {
   updatedAt DateTime @updatedAt
 
   @@map("contact")
+}
+
+model Image {
+  id          String   @id @default(cuid())
+  filename    String
+  originalName String
+  mimeType    String
+  size        Int
+  s3Key       String   @unique
+  s3Url       String
+  cloudFrontUrl String
+  uploadedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [uploadedBy], references: [id], onDelete: Cascade)
+
+  @@map("image")
 }
 
 

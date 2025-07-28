@@ -1,56 +1,81 @@
-import { NextResponse } from "next/server";
-import { auth } from "@/src/lib/auth";
+import { NextRequest, NextResponse } from 'next/server';
+import { fal } from '@fal-ai/client';
+import { requireAdmin } from '@/src/lib/dal';
 
-interface GenerateRequest {
-  prompt: string;
-  model?: string;
-  maxTokens?: number;
-  temperature?: number;
-}
+// Configure fal client
+fal.config({
+  credentials: process.env.FAL_KEY,
+});
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const session = await auth.api.getSession({ headers: request.headers });
-    if (!session) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Verify admin access
+    await requireAdmin();
+
+    const { prompt } = await request.json();
+
+    if (!prompt || typeof prompt !== 'string') {
+      return NextResponse.json(
+        { error: 'Prompt is required and must be a string' },
+        { status: 400 }
+      );
     }
 
-    const body: GenerateRequest = await request.json();
-    const { prompt, model = "openai/gpt-4", maxTokens = 1000, temperature = 0.7 } = body;
-
-    if (!prompt) {
-      return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
+    if (!process.env.FAL_KEY) {
+      return NextResponse.json(
+        { error: 'FAL_KEY environment variable is not configured' },
+        { status: 500 }
+      );
     }
 
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-        "X-Title": "Your Site Name",
-        "Content-Type": "application/json",
+    // Generate image using fal-ai
+    const result = await fal.subscribe('fal-ai/flux/dev', {
+      input: {
+        prompt,
+        image_size: 'landscape_4_3',
+        num_inference_steps: 28,
+        guidance_scale: 3.5,
+        num_images: 1,
+        enable_safety_checker: true,
+        output_format: 'jpeg',
       },
-      body: JSON.stringify({
-        model,
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        max_tokens: maxTokens,
-        temperature,
-      }),
+      logs: true,
+      onQueueUpdate: (update) => {
+        if (update.status === 'IN_PROGRESS') {
+          console.log('Generation in progress...');
+        }
+      },
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      return NextResponse.json({ error: error.message || "Generation failed" }, { status: response.status });
+    if (!result.data || !result.data.images || result.data.images.length === 0) {
+      return NextResponse.json(
+        { error: 'No image was generated' },
+        { status: 500 }
+      );
     }
 
-    const data = await response.json();
-    return NextResponse.json({ content: data.choices[0].message.content });
-  } catch {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    const image = result.data.images[0];
+
+    return NextResponse.json({
+      imageUrl: image.url,
+      prompt: result.data.prompt,
+      seed: result.data.seed,
+      hasNsfwConcepts: result.data.has_nsfw_concepts?.[0] || false,
+    });
+
+  } catch (error) {
+    console.error('Error generating image:', error);
+    
+    if (error instanceof Error && error.message.includes('unauthorized')) {
+      return NextResponse.json(
+        { error: 'Unauthorized access' },
+        { status: 401 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to generate image' },
+      { status: 500 }
+    );
   }
 } 

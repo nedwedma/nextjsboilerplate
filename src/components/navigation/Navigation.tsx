@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { auth } from "@/src/lib/auth";
-import { headers } from "next/headers";
+import { verifySession } from "@/src/lib/dal";
 import UserMenu from "./UserMenu";
 
 async function AuthStatus() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await verifySession();
   return (
     <div className="flex items-center gap-4">
       {session ? (
@@ -15,7 +14,15 @@ async function AuthStatus() {
           >
             Dashboard
           </Link>
-          <UserMenu initialSession={session} />
+          {session.role === 'admin' && (
+            <Link 
+              href="/admin"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Admin
+            </Link>
+          )}
+          <UserMenu initialSession={{ user: session.user }} />
         </>
       ) : (
         <Link 
@@ -30,7 +37,7 @@ async function AuthStatus() {
 }
 
 export default async function Navigation() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await verifySession();
   const navLinks = [
     { href: "/enterprise", label: "Enterprise" },
     { href: "/pricing", label: "Pricing" },

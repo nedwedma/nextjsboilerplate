@@ -1,21 +1,19 @@
-import { object, string } from "zod";
+import { z } from "zod";
 
 const getPasswordSchema = (type: "password" | "confirmPassword") =>
-  string({ required_error: `${type} is required` })
+  z.string()
     .min(8, `${type} must be atleast 8 characters`)
     .max(32, `${type} can not exceed 32 characters`);
 
 const getEmailSchema = () =>
-  string({ required_error: "Email is required" })
-    .min(1, "Email is required")
-    .email("Invalid email");
+  z.email("Invalid email");
 
 const getNameSchema = () =>
-  string({ required_error: "Name is required" })
+  z.string()
     .min(1, "Name is required")
     .max(50, "Name must be less than 50 characters");
 
-export const signUpSchema = object({
+export const signUpSchema = z.object({
   name: getNameSchema(),
   email: getEmailSchema(),
   password: getPasswordSchema("password"),
@@ -26,16 +24,16 @@ export const signUpSchema = object({
     path: ["confirmPassword"],
   });
 
-export const signInSchema = object({
+export const signInSchema = z.object({
   email: getEmailSchema(),
   password: getPasswordSchema("password"),
 });
 
-export const forgotPasswordSchema = object({
+export const forgotPasswordSchema = z.object({
   email: getEmailSchema(),
 });
 
-export const resetPasswordSchema = object({
+export const resetPasswordSchema = z.object({
   password: getPasswordSchema("password"),
   confirmPassword: getPasswordSchema("confirmPassword"),
 })
@@ -44,13 +42,13 @@ export const resetPasswordSchema = object({
     path: ["confirmPassword"],
   });
 
-export const contactSchema = object({
+export const contactSchema = z.object({
   name: getNameSchema(),
   email: getEmailSchema(),
-  subject: string({ required_error: "Subject is required" })
+  subject: z.string()
     .min(5, "Subject must be at least 5 characters")
     .max(100, "Subject must be less than 100 characters"),
-  message: string({ required_error: "Message is required" })
+  message: z.string()
     .min(10, "Message must be at least 10 characters")
     .max(1000, "Message must be less than 1000 characters"),
 });
