@@ -5,7 +5,7 @@ import type { Session } from "@/src/lib/auth";
 const authRoutes = ["/sign-in", "/sign-up"];
 const protectedRoutes = ["/dashboard", "/profile", "/settings"];
 
-export default async function authMiddleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathName = request.nextUrl.pathname;
   const isAuthRoute = authRoutes.includes(pathName);
   const isAdminRoute = pathName.startsWith("/admin");

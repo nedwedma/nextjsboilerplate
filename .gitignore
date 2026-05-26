@@ -22,6 +22,7 @@
 
 # misc
 .DS_Store
+.cache
 *.pem
 
 # debug
@@ -42,6 +43,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma
+/src/generated
 
 #drizzle 
 /drizzle

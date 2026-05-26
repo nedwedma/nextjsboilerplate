@@ -1,9 +1,16 @@
 import { NextConfig } from "next";
 
 const nextConfig = {
-  eslint: { ignoreDuringBuilds: false },
   typescript: { ignoreBuildErrors: false },
   pageExtensions: ["ts", "tsx", "mdx"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
   async headers() {
     return [
       {
