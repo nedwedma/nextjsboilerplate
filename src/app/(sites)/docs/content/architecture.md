@@ -1,109 +1,82 @@
 # Architecture Overview
 
-This document provides an overview of the architecture and design principles of the Antimetal boilerplate.
+This document provides an overview of the architecture and design principles of the Indieboilerplate.
 
 ## Core Technologies
 
-The Antimetal boilerplate is built on the following core technologies:
-
-- **Next.js**: The React framework for production, providing server-side rendering, static site generation, and the App Router.
-- **React**: A JavaScript library for building user interfaces.
-- **TypeScript**: A strongly typed programming language that builds on JavaScript.
-- **Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs.
-- **NextAuth.js**: A complete authentication solution for Next.js applications.
+- **Next.js 16**: App Router, Server Components, Turbopack and `proxy.ts` (formerly `middleware.ts`).
+- **React 19** and **TypeScript 6**.
+- **better-auth**: Email/password authentication with email verification, Google OAuth and the admin plugin (roles, bans, impersonation).
+- **Prisma ORM 7**: PostgreSQL via the `@prisma/adapter-pg` driver adapter. The client is generated into `src/generated/prisma`.
+- **Tailwind CSS 4** with **shadcn/ui** components built on **Base UI**.
+- **Maileroo** for transactional email, **S3/CloudFront** for image storage, **fal.ai** and **OpenRouter** for AI features.
 
 ## Project Structure
 
-The project follows a modular structure to keep the codebase organized and maintainable:
-
 ```
-antimetal/
-├── public/            # Static assets
-├── src/
-│   ├── app/           # App router pages and layouts
-│   │   ├── (auth)/    # Authentication-related pages (login, register)
-│   │   ├── (site)/    # Main site pages
-│   │   ├── api/       # API routes
-│   │   └── dashboard/ # Dashboard pages (protected)
-│   ├── components/    # Reusable components
-│   │   ├── auth/      # Authentication components
-│   │   ├── navigation/# Navigation components
-│   │   └── ui/        # UI components
-│   ├── lib/           # Utility functions and libraries
-│   └── styles/        # Global styles
+.
+├── prisma/
+│   ├── schema.prisma     # Database schema (better-auth models + app models)
+│   └── migrations/       # SQL migrations
+├── prisma.config.ts      # Prisma CLI configuration (schema, migrations, DATABASE_URL)
+├── public/               # Static assets
+└── src/
+    ├── app/
+    │   ├── (auth)/       # Sign-in, sign-up, password reset, email verification
+    │   ├── (main)/       # Landing page sections
+    │   ├── (protected)/  # Dashboard and admin pages (require a session)
+    │   ├── (sites)/      # Content pages such as the docs
+    │   ├── actions/      # Server actions
+    │   └── api/          # Route handlers (auth, contact, admin images, AI)
+    ├── components/
+    │   ├── admin/        # Admin dashboard components
+    │   ├── navigation/   # Header, user menu, mobile menu
+    │   ├── reusable/     # Shared feature components (e.g. contact form)
+    │   └── ui/           # shadcn/ui components
+    ├── generated/        # Generated Prisma client (not committed)
+    ├── lib/              # auth, dal, prisma, email, s3, validation schemas
+    └── proxy.ts          # Optimistic route protection
 ```
 
 ## App Router Structure
 
-The Antimetal boilerplate uses Next.js App Router, which provides a file-system based router built on top of Server Components. The structure is as follows:
-
-- **Route Groups**: Folders with names in parentheses like `(auth)` and `(site)` are route groups. They don't affect the URL path but help organize the code.
-- **Layouts**: Each section can have its own layout defined in a `layout.tsx` file.
-- **Pages**: Each route has a `page.tsx` file that defines the main content of the page.
-- **Loading States**: Optional `loading.tsx` files define loading UI for the route.
-- **Error Handling**: Optional `error.tsx` files define error UI for the route.
-
-## Component Architecture
-
-Components are organized into several categories:
-
-- **UI Components**: Basic building blocks like buttons, inputs, and cards.
-- **Navigation Components**: Components related to site navigation, like the navbar and mobile menu.
-- **Auth Components**: Components related to authentication, like login and registration forms.
-- **Feature Components**: Components specific to certain features or pages.
+- **Route Groups**: Folders in parentheses like `(auth)` and `(protected)` organize the code without affecting the URL.
+- **Layouts**: Shared UI per section in `layout.tsx`. Layouts are not used for authorization (see below).
+- **Pages**: Each route has a `page.tsx` that defines its content.
 
 ## Authentication Flow
 
-The authentication system is built with NextAuth.js and follows these principles:
+Authentication is handled by better-auth (`src/lib/auth.ts` on the server, `src/lib/auth-client.ts` in the browser). All auth endpoints are served by the catch-all route `src/app/api/auth/[...all]`.
 
-1. **Server-Side Authentication**: Authentication state is primarily managed on the server.
-2. **Protected Routes**: Certain routes (like `/dashboard`) are protected and require authentication.
-3. **Multiple Providers**: Support for multiple authentication providers (email/password, OAuth).
-4. **Session Management**: User sessions are managed securely with cookies.
+Route protection has two layers:
+
+1. **Proxy (optimistic)**: `src/proxy.ts` only checks whether a session cookie exists and redirects to `/sign-in` for `/dashboard`, `/profile`, `/settings` and `/admin`. It does not hit the database.
+2. **Data Access Layer (authoritative)**: `src/lib/dal.ts` validates the session against the database. Every protected page, server action and route handler calls `requireAuth()` or `requireAdmin()` itself.
+
+Checks live in pages and handlers rather than layouts, because layouts are not re-rendered on client-side navigation and do not prevent nested segments from rendering.
+
+## Email
+
+`src/lib/email.ts` exposes `sendEmail()`, which calls the Maileroo API directly. It is used by better-auth (verification, password reset, email change) and by the contact form. There is no public email endpoint.
 
 ## Styling Approach
 
-The styling approach uses Tailwind CSS with some additional patterns:
-
-1. **Utility-First**: Most styling is done with utility classes directly in the JSX.
-2. **Component Classes**: For complex components, we use the `cn()` utility to combine classes.
-3. **Global Styles**: Minimal global styles defined in `globals.css`.
-4. **Responsive Design**: Mobile-first approach with responsive breakpoints.
-
-## State Management
-
-State management follows these principles:
-
-1. **Local State**: React's `useState` and `useReducer` for component-level state.
-2. **Server State**: Server Components for data that can be fetched on the server.
-3. **Form State**: Form state is managed with controlled components or form libraries.
-4. **Global State**: Minimal global state, primarily for authentication status.
+1. **Utility-First**: Styling is done with Tailwind utility classes in JSX.
+2. **Design Tokens**: Theme colors are CSS variables in `src/app/globals.css`, exposed to Tailwind via `@theme inline`.
+3. **Component Classes**: The `cn()` helper merges classes; variants use `class-variance-authority`.
+4. **Responsive Design**: Mobile-first with responsive breakpoints.
 
 ## API Structure
 
-The API follows a RESTful structure:
-
-1. **Route Handlers**: API endpoints are defined in the `app/api` directory.
-2. **Authentication**: Protected endpoints check for valid sessions.
-3. **Error Handling**: Consistent error response format.
-4. **Data Validation**: Input validation for all API requests.
-
-## Performance Considerations
-
-The boilerplate is designed with performance in mind:
-
-1. **Server Components**: Using React Server Components to reduce client-side JavaScript.
-2. **Code Splitting**: Automatic code splitting based on routes.
-3. **Image Optimization**: Using Next.js Image component for optimized images.
-4. **Font Optimization**: Using Next.js Font system for optimized font loading.
-5. **Minimal Dependencies**: Keeping external dependencies to a minimum.
+1. **Route Handlers**: Endpoints live in `src/app/api`.
+2. **Authentication**: Protected endpoints verify the session (and role) on every request.
+3. **Validation**: Request bodies are validated with Zod schemas from `src/lib/zod.ts`.
+4. **Error Handling**: Errors are returned as `{ error: string }` with a matching status code.
 
 ## Security Considerations
 
-Security is a priority in the boilerplate:
-
-1. **Authentication**: Secure authentication with NextAuth.js.
-2. **CSRF Protection**: Protection against Cross-Site Request Forgery.
-3. **Content Security Policy**: Strict Content Security Policy headers.
-4. **Input Validation**: Validation of all user inputs.
-5. **Dependency Scanning**: Regular scanning for vulnerable dependencies. 
+1. **Authentication**: Sessions are managed by better-auth with HTTP-only cookies.
+2. **Authorization**: Enforced in the DAL, not only in the proxy or the UI.
+3. **Input Validation**: Server-side validation of user input; user content in emails is HTML-escaped.
+4. **Security Headers**: HSTS, `X-Frame-Options`, `X-Content-Type-Options` and `Referrer-Policy` are set in `next.config.ts`.
+5. **Dependency Scanning**: Run `npm audit` regularly.

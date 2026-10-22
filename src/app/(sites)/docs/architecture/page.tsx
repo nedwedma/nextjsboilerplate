@@ -4,7 +4,7 @@ import { getMarkdownContent } from "@/src/lib/markdown";
 
 export const metadata: Metadata = {
   title: "Architecture",
-  description: "Understand the architecture and structure of the Antimetal boilerplate",
+  description: "Understand the architecture and structure of the Indieboilerplate",
 };
 
 export default async function ArchitecturePage() {
@@ -20,7 +20,7 @@ export default async function ArchitecturePage() {
             Architecture
           </h1>
           <p className="text-gray-600">
-            Understand the architecture and structure of the Antimetal boilerplate.
+            Understand the architecture and structure of the Indieboilerplate.
           </p>
         </div>
 
