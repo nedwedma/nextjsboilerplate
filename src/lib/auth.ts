@@ -1,5 +1,5 @@
 import { betterAuth, BetterAuthOptions } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
+import { prismaAdapter } from "@better-auth/prisma-adapter";
 import prisma from "@/src/lib/prisma";
 import { openAPI } from "better-auth/plugins";
 import { admin } from "better-auth/plugins";
