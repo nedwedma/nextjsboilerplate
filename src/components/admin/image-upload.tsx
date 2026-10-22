@@ -5,6 +5,8 @@ import { Card } from '@/src/components/ui/card';
 import { Button } from '@/src/components/ui/button';
 import { Upload, X, CheckCircle, AlertCircle } from 'lucide-react';
 import { ImageData } from '@/src/types/image';
+import { saveUploadedImage } from '@/src/app/actions/admin-images';
+import { MAX_IMAGE_SIZE, isAllowedImageType, type AllowedImageType } from '@/src/lib/images';
 
 interface ImageUploadProps {
   onUploadComplete: (image: ImageData) => void;
@@ -23,11 +25,10 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateFile = (file: File): string | null => {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(file.type)) {
+    if (!isAllowedImageType(file.type)) {
       return 'Only JPEG, PNG, WebP and GIF images are allowed';
     }
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > MAX_IMAGE_SIZE) {
       return 'File size must be less than 10MB';
     }
     return null;
@@ -51,7 +52,7 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
         throw new Error(error.error || 'Failed to get upload URL');
       }
 
-      const { presignedUrl, s3Key, s3Url, cloudFrontUrl } = await response.json();
+      const { presignedUrl, s3Key } = await response.json();
 
       // Update progress
       setUploadingFiles(prev => 
@@ -77,25 +78,18 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
       );
 
       // Save metadata
-      const metadataResponse = await fetch('/api/admin/images', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          filename: file.name,
-          originalName: file.name,
-          mimeType: file.type,
-          size: file.size,
-          s3Key,
-          s3Url,
-          cloudFrontUrl,
-        }),
+      const result = await saveUploadedImage({
+        s3Key,
+        originalName: file.name,
+        mimeType: file.type as AllowedImageType,
+        size: file.size,
       });
 
-      if (!metadataResponse.ok) {
-        throw new Error('Failed to save image metadata');
+      if (!result.ok) {
+        throw new Error(result.error);
       }
 
-      const { image } = await metadataResponse.json();
+      const image = result.data;
 
       // Mark as complete
       setUploadingFiles(prev => 

@@ -1,50 +1,33 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/src/lib/auth';
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+import { assertAdmin, handleRouteError } from '@/src/lib/dal';
 import { generatePresignedUploadUrl, generateS3Key } from '@/src/lib/s3';
+import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE } from '@/src/lib/images';
 
-export async function POST(request: NextRequest) {
+const presignSchema = z.object({
+  filename: z.string().trim().min(1).max(255),
+  contentType: z.enum(ALLOWED_IMAGE_TYPES, 'Only JPEG, PNG, WebP and GIF images are allowed'),
+  size: z.number().int().positive().max(MAX_IMAGE_SIZE, 'File size must be less than 10MB'),
+});
+
+export async function POST(request: Request) {
   try {
-    const session = await auth.api.getSession({ headers: request.headers });
-    
-    if (!session?.user?.id || session.user.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const session = await assertAdmin();
 
-    const { filename, contentType, size } = await request.json();
-
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-    if (!allowedTypes.includes(contentType)) {
+    const parsed = presignSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Only JPEG, PNG, WebP and GIF images are allowed' },
+        { error: parsed.error.issues[0]?.message ?? 'Invalid request' },
         { status: 400 }
       );
     }
 
-    // Validate file size (max 10MB)
-    if (size > 10 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: 'File size must be less than 10MB' },
-        { status: 400 }
-      );
-    }
+    const { filename, contentType, size } = parsed.data;
+    const s3Key = generateS3Key(filename, session.userId);
+    const { presignedUrl } = await generatePresignedUploadUrl(s3Key, contentType, size);
 
-    const s3Key = generateS3Key(filename, session.user.id);
-    const uploadData = await generatePresignedUploadUrl(s3Key, contentType);
-
-    return NextResponse.json({
-      ...uploadData,
-      s3Key,
-      filename,
-      contentType,
-      size,
-    });
-
+    return NextResponse.json({ presignedUrl, s3Key });
   } catch (error) {
-    console.error('Presigned URL generation error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate upload URL' },
-      { status: 500 }
-    );
+    return handleRouteError(error, 'Failed to generate upload URL');
   }
-} 
+}

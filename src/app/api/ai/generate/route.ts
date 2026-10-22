@@ -1,37 +1,37 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { fal } from '@fal-ai/client';
-import { requireAdmin } from '@/src/lib/dal';
+import { z } from 'zod';
+import { assertAdmin, handleRouteError } from '@/src/lib/dal';
+import { env } from '@/src/lib/env';
 
-// Configure fal client
 fal.config({
-  credentials: process.env.FAL_KEY,
+  credentials: env.FAL_KEY,
 });
 
-export async function POST(request: NextRequest) {
+const generateSchema = z.object({
+  prompt: z.string().trim().min(1, 'Prompt is required').max(1000, 'Prompt is too long'),
+});
+
+export async function POST(request: Request) {
   try {
-    // Verify admin access
-    await requireAdmin();
+    await assertAdmin();
 
-    const { prompt } = await request.json();
-
-    if (!prompt || typeof prompt !== 'string') {
+    const parsed = generateSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Prompt is required and must be a string' },
+        { error: parsed.error.issues[0]?.message ?? 'Invalid request' },
         { status: 400 }
       );
     }
 
-    if (!process.env.FAL_KEY) {
-      return NextResponse.json(
-        { error: 'FAL_KEY environment variable is not configured' },
-        { status: 500 }
-      );
+    if (!env.FAL_KEY) {
+      console.error('FAL_KEY environment variable is not configured');
+      return NextResponse.json({ error: 'Image generation is not configured' }, { status: 503 });
     }
 
-    // Generate image using fal-ai
     const result = await fal.subscribe('fal-ai/flux/dev', {
       input: {
-        prompt,
+        prompt: parsed.data.prompt,
         image_size: 'landscape_4_3',
         num_inference_steps: 28,
         guidance_scale: 3.5,
@@ -39,22 +39,12 @@ export async function POST(request: NextRequest) {
         enable_safety_checker: true,
         output_format: 'jpeg',
       },
-      logs: true,
-      onQueueUpdate: (update) => {
-        if (update.status === 'IN_PROGRESS') {
-          console.log('Generation in progress...');
-        }
-      },
     });
 
-    if (!result.data || !result.data.images || result.data.images.length === 0) {
-      return NextResponse.json(
-        { error: 'No image was generated' },
-        { status: 500 }
-      );
+    const image = result.data?.images?.[0];
+    if (!image) {
+      return NextResponse.json({ error: 'No image was generated' }, { status: 502 });
     }
-
-    const image = result.data.images[0];
 
     return NextResponse.json({
       imageUrl: image.url,
@@ -62,20 +52,7 @@ export async function POST(request: NextRequest) {
       seed: result.data.seed,
       hasNsfwConcepts: result.data.has_nsfw_concepts?.[0] || false,
     });
-
   } catch (error) {
-    console.error('Error generating image:', error);
-    
-    if (error instanceof Error && error.message.includes('unauthorized')) {
-      return NextResponse.json(
-        { error: 'Unauthorized access' },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to generate image' },
-      { status: 500 }
-    );
+    return handleRouteError(error, 'Failed to generate image');
   }
-} 
+}

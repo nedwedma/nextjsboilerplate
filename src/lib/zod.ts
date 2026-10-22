@@ -1,9 +1,10 @@
 import { z } from "zod";
 
+// Keep in sync with emailAndPassword.minPasswordLength/maxPasswordLength in src/lib/auth.ts
 const getPasswordSchema = (type: "password" | "confirmPassword") =>
   z.string()
-    .min(8, `${type} must be atleast 8 characters`)
-    .max(32, `${type} can not exceed 32 characters`);
+    .min(8, `${type} must be at least 8 characters`)
+    .max(128, `${type} can not exceed 128 characters`);
 
 const getEmailSchema = () =>
   z.email("Invalid email");
@@ -24,9 +25,10 @@ export const signUpSchema = z.object({
     path: ["confirmPassword"],
   });
 
+// No length rules on sign-in: they would leak the policy and lock out users if it changes.
 export const signInSchema = z.object({
   email: getEmailSchema(),
-  password: getPasswordSchema("password"),
+  password: z.string().min(1, "Password is required"),
 });
 
 export const forgotPasswordSchema = z.object({

@@ -1,3 +1,5 @@
+import { env } from "@/src/lib/env";
+
 const MAILEROO_API_URL = "https://smtp.maileroo.com/send";
 
 export type SendEmailParams = {
@@ -8,8 +10,8 @@ export type SendEmailParams = {
 };
 
 export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
-  const apiKey = process.env.MAILEROO_API_KEY;
-  const fromEmail = process.env.EMAIL_FROM;
+  const apiKey = env.MAILEROO_API_KEY;
+  const fromEmail = env.EMAIL_FROM;
 
   if (!apiKey || !fromEmail) {
     throw new Error("Email service is not configured (MAILEROO_API_KEY, EMAIL_FROM)");

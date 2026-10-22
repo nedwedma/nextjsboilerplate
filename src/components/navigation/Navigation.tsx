@@ -14,7 +14,7 @@ async function AuthStatus() {
           >
             Dashboard
           </Link>
-          {session.role === 'admin' && (
+          {session.isAdmin && (
             <Link 
               href="/admin"
               className="text-gray-600 hover:text-gray-900 transition-colors"

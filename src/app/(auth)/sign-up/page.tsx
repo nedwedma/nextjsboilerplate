@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/src
 import { Input } from "@/src/components/ui/input";
 import { Label } from "@/src/components/ui/label";
 import { Button } from "@/src/components/ui/button";
+import { signUpSchema } from "@/src/lib/zod";
 
 import Link from "next/link";
 import { useState } from "react";
@@ -12,40 +13,49 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
+type SignUpField = "name" | "email" | "password" | "confirmPassword";
+
 export default function SignUp() {
 	const router = useRouter();
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [values, setValues] = useState<Record<SignUpField, string>>({
+		name: "",
+		email: "",
+		password: "",
+		confirmPassword: "",
+	});
 	const [pending, setPending] = useState(false);
-	const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
+	const [formErrors, setFormErrors] = useState<Partial<Record<SignUpField, string>>>({});
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setValues(prev => ({ ...prev, [name]: value }));
+	};
 
 	const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setFormErrors({});
 
-		const errors: { email?: string; password?: string } = {};
-		if (!email) {
-			errors.email = "Email is required";
-		} else if (!/\S+@\S+\.\S+/.test(email)) {
-			errors.email = "Invalid email address";
-		}
-		if (!password) {
-			errors.password = "Password is required";
-		} else if (password.length < 8) {
-			errors.password = "Password must be at least 8 characters";
-		}
+		const validationResult = signUpSchema.safeParse(values);
 
-		if (Object.keys(errors).length > 0) {
+		if (!validationResult.success) {
+			const errors: Partial<Record<SignUpField, string>> = {};
+			validationResult.error.issues.forEach(err => {
+				const field = err.path[0] as SignUpField;
+				errors[field] ??= err.message;
+			});
 			setFormErrors(errors);
 			return;
 		}
 
+		const { name, email, password } = validationResult.data;
+
 		setPending(true);
 		await authClient.signUp.email(
 			{
+				name,
 				email,
 				password,
-				name: "",
+				callbackURL: "/email-verified",
 			},
 			{
 				onSuccess: () => {
@@ -54,7 +64,7 @@ export default function SignUp() {
 				},
 				onError: (ctx) => {
 					toast.error(ctx.error.message ?? "Sign up failed.");
-					if (ctx.error.message.toLowerCase().includes('email')) {
+					if (ctx.error.message?.toLowerCase().includes('email')) {
 						setFormErrors({ email: ctx.error.message });
 					} else {
 						setFormErrors({ password: ctx.error.message });
@@ -75,20 +85,35 @@ export default function SignUp() {
 						Create Account
 					</CardTitle>
 					<CardDescription className="text-center text-sm text-gray-600">
-						Enter your email and password to sign up.
+						Enter your details to sign up.
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<form onSubmit={handleSignUp} className="space-y-6">
 						<div className="grid gap-2">
+							<Label htmlFor="name">Name</Label>
+							<Input
+								id="name"
+								name="name"
+								placeholder="Jane Doe"
+								required
+								onChange={handleChange}
+								value={values.name}
+								autoComplete="name"
+								disabled={pending}
+							/>
+							{formErrors.name && <p className="text-xs text-red-600 mt-1">{formErrors.name}</p>}
+						</div>
+						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
 							<Input
 								id="email"
+								name="email"
 								type="email"
 								placeholder="m@example.com"
 								required
-								onChange={(e) => setEmail(e.target.value)}
-								value={email}
+								onChange={handleChange}
+								value={values.email}
 								autoComplete="email"
 								disabled={pending}
 							/>
@@ -98,15 +123,31 @@ export default function SignUp() {
 							<Label htmlFor="password">Password</Label>
 							<Input
 								id="password"
+								name="password"
 								type="password"
 								required
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
+								value={values.password}
+								onChange={handleChange}
 								autoComplete="new-password"
 								placeholder="••••••••"
 								disabled={pending}
 							/>
 							{formErrors.password && <p className="text-xs text-red-600 mt-1">{formErrors.password}</p>}
+						</div>
+						<div className="grid gap-2">
+							<Label htmlFor="confirmPassword">Confirm password</Label>
+							<Input
+								id="confirmPassword"
+								name="confirmPassword"
+								type="password"
+								required
+								value={values.confirmPassword}
+								onChange={handleChange}
+								autoComplete="new-password"
+								placeholder="••••••••"
+								disabled={pending}
+							/>
+							{formErrors.confirmPassword && <p className="text-xs text-red-600 mt-1">{formErrors.confirmPassword}</p>}
 						</div>
 						<Button type="submit" disabled={pending} className="w-full">
 							{pending ? (

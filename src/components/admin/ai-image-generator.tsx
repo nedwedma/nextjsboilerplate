@@ -8,6 +8,7 @@ import { Label } from '@/src/components/ui/label';
 import { Loader2, Sparkles, Download, Save } from 'lucide-react';
 import { ImageData } from '@/src/types/image';
 import Image from 'next/image';
+import { saveAiImage } from '@/src/app/actions/admin-images';
 
 interface AIImageGeneratorProps {
   onImageGenerated: (image: ImageData) => void;
@@ -47,11 +48,12 @@ export default function AIImageGenerator({ onImageGenerated }: AIImageGeneratorP
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to generate image');
+        throw new Error(data.error || 'Failed to generate image');
       }
 
-      const data = await response.json();
       setGeneratedImage({
         url: data.imageUrl,
         prompt: prompt.trim(),
@@ -71,24 +73,16 @@ export default function AIImageGenerator({ onImageGenerated }: AIImageGeneratorP
     setError(null);
 
     try {
-      const response = await fetch('/api/admin/images', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          imageUrl: generatedImage.url,
-          prompt: generatedImage.prompt,
-          isAiGenerated: true,
-        }),
+      const result = await saveAiImage({
+        imageUrl: generatedImage.url,
+        prompt: generatedImage.prompt,
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to save image to library');
+      if (!result.ok) {
+        throw new Error(result.error);
       }
 
-      const savedImage = await response.json();
-      onImageGenerated(savedImage);
+      onImageGenerated(result.data);
       setGeneratedImage(null);
       setPrompt('');
     } catch (err) {

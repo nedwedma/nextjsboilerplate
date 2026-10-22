@@ -5,6 +5,7 @@ import { Button } from '@/src/components/ui/button';
 import { Trash2, Copy, ExternalLink, Calendar, User, FileImage } from 'lucide-react';
 import { toast } from 'sonner';
 import { ImageData } from '@/src/types/image';
+import { deleteImage as deleteImageAction } from '@/src/app/actions/admin-images';
 
 interface ImageGridProps {
   images: ImageData[];
@@ -32,12 +33,10 @@ export default function ImageGrid({ images, onImageDeleted }: ImageGridProps) {
     setDeletingIds(prev => new Set(prev).add(imageId));
 
     try {
-      const response = await fetch(`/api/admin/images?id=${imageId}`, {
-        method: 'DELETE',
-      });
+      const result = await deleteImageAction(imageId);
 
-      if (!response.ok) {
-        throw new Error('Failed to delete image');
+      if (!result.ok) {
+        throw new Error(result.error);
       }
 
       onImageDeleted(imageId);
