@@ -1,6 +1,7 @@
 import { Check, Star } from "lucide-react";
 import type React from "react";
 import Link from "next/link";
+import { siteConfig } from "@/src/lib/site-config";
 
 export default function PricingSection() {
   return (
@@ -45,7 +46,7 @@ export default function PricingSection() {
             </div>
 
             <Link
-              href="https://github.com/yourusername/nextjs-boilerplate"
+              href={siteConfig.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-gray-100 hover:bg-gray-200 transition-colors text-gray-800 font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 border border-gray-200"
@@ -85,7 +86,7 @@ export default function PricingSection() {
             </div>
 
             <Link
-              href="https://github.com/yourusername/nextjs-boilerplate"
+              href={siteConfig.repoUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full bg-blue-600 hover:bg-blue-700 transition-colors text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2"

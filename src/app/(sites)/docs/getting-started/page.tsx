@@ -4,7 +4,7 @@ import { getMarkdownContent } from "@/src/lib/markdown";
 
 export const metadata: Metadata = {
   title: "Getting Started",
-  description: "Learn how to set up and run the Indieboilerplate for your project",
+  description: "Learn how to set up and run the boilerplate for your project",
 };
 
 export default async function GettingStartedPage() {
@@ -20,7 +20,7 @@ export default async function GettingStartedPage() {
             Getting Started
           </h1>
           <p className="text-gray-600">
-            Learn how to set up and run the Indieboilerplate for your project.
+            Learn how to set up and run the boilerplate for your project.
           </p>
         </div>
 

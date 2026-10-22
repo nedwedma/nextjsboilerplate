@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { siteConfig } from "@/src/lib/site-config";
 
 const HeroSection = () => {
   return (
@@ -19,7 +20,7 @@ const HeroSection = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-10">
             <Link
-              href="https://github.com/yourusername/nextjs-boilerplate"
+              href={siteConfig.repoUrl}
               className="inline-flex items-center justify-center bg-[#e9ff1a] hover:bg-[#d9ef0a] text-black px-6 py-2 rounded-md font-medium text-sm duration-300 transition-colors"
             >
               <span className="mr-2 text-black">→</span>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { siteConfig } from "@/src/lib/site-config";
 
 export default function Footer() {
   return (
@@ -9,13 +10,10 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <span className="text-xl font-semibold text-gray-900">
-                Boilerplate
+                {siteConfig.name}
               </span>
             </div>
-            <p className="text-sm text-gray-600">Modern tools for modern developers</p>
-            <div className="inline-flex items-center gap-2 rounded-md border border-zinc-500 bg-white px-4 py-2 text-xs text-zinc-400">
-              Built with Boilerplate
-            </div>
+            <p className="text-sm text-gray-600">{siteConfig.description}</p>
           </div>
 
           {/* Links Column */}
@@ -72,7 +70,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <Link
-                  href="/terms"
+                  href="/tos"
                   className="text-gray-600 hover:text-blue-600"
                 >
                   Terms of Service
@@ -80,7 +78,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="/privacy"
+                  href="/privacy-policy"
                   className="text-gray-600 hover:text-blue-600"
                 >
                   Privacy Policy
@@ -107,13 +105,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 border-t border-gray-200 pt-8 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} SaasXpertz Boilerplate. All Rights Reserved. Cooked for you by{" "}
-          <a
-            href="https://saasxpertz.com"
-            className="text-zinc-400"
-          >
-            saasxpertz.com
-          </a>
+          © {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.
         </div>
       </div>
     </footer>

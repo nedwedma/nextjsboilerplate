@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document provides an overview of the architecture and design principles of the Indieboilerplate.
+This document provides an overview of the architecture and design principles of the boilerplate.
 
 ## Core Technologies
 

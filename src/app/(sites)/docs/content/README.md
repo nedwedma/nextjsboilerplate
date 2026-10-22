@@ -1,6 +1,6 @@
 # Documentation Guide
 
-This directory contains the markdown content for the Indieboilerplate documentation. This README explains how to add or modify documentation.
+This directory contains the markdown content for the documentation. This README explains how to add or modify documentation.
 
 ## Directory Structure
 

@@ -1,32 +1,12 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/src/lib/site-config";
 
-// CHATGPT PROMPT TO GENERATE YOUR PRIVACY POLICY — replace with your own data 👇
-
-// 1. Go to https://chat.openai.com/
-// 2. Copy paste bellow
-// 3. Replace the data with your own (if needed)
-// 4. Paste the answer from ChatGPT directly in the <pre> tag below
-
-// You are an excellent lawyer.
-
-// I need your help to write a simple privacy policy for my website. Here is some context:
-// - Website: https://gopump.co
-// - Name: Pump
-// - Description: An application responsible for help Personal Trainers and People that like to go to the gym improve their performance.
-// - User data collected: name, email, phone, and payment information
-// - Non-personal data collection: web cookies
-// - Purpose of Data Collection: To know better our clients
-// - Data sharing: we do not share the data with any other parties
-// - Children's Privacy: we do not collect any data from children
-// - Updates to the Privacy Policy: users will be updated by email
-// - Contact information: official@gopump.co
-
-// Please write a simple privacy policy for my site. Add the current date.  Do not add or explain your reasoning. Answer:
+// Placeholder content — replace with your own Privacy Policy before going live.
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Antimetal",
-  description: "Privacy Policy for Antimetal services and website",
+  title: `Privacy Policy | ${siteConfig.name}`,
+  description: `Privacy Policy for ${siteConfig.name}`,
 };
 
 const PrivacyPolicy = () => {
@@ -57,43 +37,43 @@ const PrivacyPolicy = () => {
             Privacy Policy
           </h1>
           <p className="text-gray-600">
-            Last updated: March 6, 2024
+            Last updated: {siteConfig.legalLastUpdated}
           </p>
         </div>
 
         {/* Content */}
         <div className="prose prose-lg max-w-none text-gray-700">
           <p>
-            Welcome to Antimetal. Your privacy is of utmost importance to us. This Privacy Policy outlines the types of information we collect, how we use it, and the measures we take to protect it.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
           </p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">1. Collection and Use of Information</h2>
           
-          <p>We collect the following types of information:</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
           
-          <p><strong>Personal Data:</strong> This includes your name, email address, phone number, and payment information. We collect this data to better understand and serve our customers.</p>
+          <p><strong>Personal Data:</strong> Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
           
-          <p><strong>Non-Personal Data:</strong> We use web cookies to enhance your experience on our website. These cookies help us understand user behavior on our site but do not collect personal information.</p>
+          <p><strong>Non-Personal Data:</strong> Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">2. Purpose of Data Collection</h2>
           
-          <p>The primary purpose of data collection is to improve our services and provide a personalized experience for our users. Understanding our customers helps us enhance our application and offer more tailored guidance and support.</p>
+          <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">3. Data Sharing and Disclosure</h2>
           
-          <p>Antimetal respects your privacy. We do not share your personal data with third parties. Any data collected is exclusively for the purpose of improving our service and is not shared externally.</p>
+          <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">4. Children&apos;s Privacy</h2>
           
-          <p>Our services are not directed at children under the age of 13. We do not knowingly collect personal information from children. If we become aware that we have inadvertently received personal information from a child under the age of 13, we will delete such information from our records.</p>
+          <p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">5. Changes to Our Privacy Policy</h2>
           
-          <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date. You will also be informed of any significant changes via the email address you have provided us.</p>
+          <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">6. Contact Us</h2>
           
-          <p>If you have any questions about this Privacy Policy, please contact us at <a href="mailto:contact@antimetal.com" className="text-blue-600 hover:text-blue-800 transition">contact@antimetal.com</a>.</p>
+          <p>At vero eos et accusamus et iusto odio dignissimos: <a href={`mailto:${siteConfig.contactEmail}`} className="text-blue-600 hover:text-blue-800 transition">{siteConfig.contactEmail}</a>.</p>
         </div>
       </div>
     </div>

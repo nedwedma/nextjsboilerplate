@@ -1,32 +1,12 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/src/lib/site-config";
 
-// CHATGPT PROMPT TO GENERATE YOUR TERMS & SERVICES — replace with your own data 👇
-
-// 1. Go to https://chat.openai.com/
-// 2. Copy paste bellow
-// 3. Replace the data with your own (if needed)
-// 4. Paste the answer from ChatGPT directly in the <pre> tag below
-
-// You are an excellent lawyer.
-
-// I need your help to write a simple Terms & Services for my website. Here is some context:
-// - Website: https://gopump.co
-// - Name: Pump
-// - Contact information: official@gopump.co
-// - Description: An application responsible for help Personal Trainers and People that like to go to the gym improve their performance.
-// - Ownership: when buying a plan/subscription, users can interact with many features. They can ask for a full refund within 7 day after the purchase.
-// - User data collected: name, email, phone and payment information
-// - Non-personal data collection: web cookies
-// - Link to privacy-policy: https://gopump.co/privacy-policy
-// - Governing Law: France
-// - Updates to the Terms: users will be updated by email
-
-// Please write a simple Terms & Services for my site. Add the current date. Do not add or explain your reasoning. Answer:
+// Placeholder content — replace with your own Terms of Service before going live.
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Antimetal",
-  description: "Terms of Service for Antimetal services and website",
+  title: `Terms of Service | ${siteConfig.name}`,
+  description: `Terms of Service for ${siteConfig.name}`,
 };
 
 const TOS = () => {
@@ -57,47 +37,47 @@ const TOS = () => {
             Terms of Service
           </h1>
           <p className="text-gray-600">
-            Last updated: March 6, 2024
+            Last updated: {siteConfig.legalLastUpdated}
           </p>
         </div>
 
         {/* Content */}
         <div className="prose prose-lg max-w-none text-gray-700">
           <p>
-            Welcome to Antimetal. These Terms of Service (&quot;Terms&quot;) govern your use of our application, which aims to help developers and businesses improve their performance. By accessing or using Antimetal, you agree to comply with these Terms.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
           </p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">1. Contact Information</h2>
           
-          <p>For any questions or information, please contact us at <a href="mailto:contact@antimetal.com" className="text-blue-600 hover:text-blue-800 transition">contact@antimetal.com</a>.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit: <a href={`mailto:${siteConfig.contactEmail}`} className="text-blue-600 hover:text-blue-800 transition">{siteConfig.contactEmail}</a>.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">2. Ownership and Service Usage</h2>
           
-          <p>When purchasing a plan or subscription on Antimetal, you gain access to various features. If you are not satisfied, we offer a full refund within 7 days after purchase.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">3. Data Collection</h2>
           
-          <p>We collect personal data such as name, email, phone, and payment information. We also use web cookies to collect non-personal data. More information can be found in our <Link href="/privacy-policy" className="text-blue-600 hover:text-blue-800 transition">Privacy Policy</Link>.</p>
+          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. See our <Link href="/privacy-policy" className="text-blue-600 hover:text-blue-800 transition">Privacy Policy</Link>.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">4. Applicable Law</h2>
           
-          <p>These Terms are governed by the laws of the United States.</p>
+          <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">5. Changes to Terms</h2>
           
-          <p>We reserve the right to modify these Terms at any time. Changes will take effect immediately upon posting on the website. We will inform you about significant changes through the email you provided.</p>
+          <p>Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">6. Acceptance of Terms</h2>
           
-          <p>By using Antimetal, you declare that you have read, understood, and agreed to be bound by these Terms.</p>
+          <p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">7. Limitation of Liability</h2>
           
-          <p>To the maximum extent permitted by law, Antimetal shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses, resulting from your use or inability to use the service.</p>
+          <p>Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>
           
           <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-800">8. Account Termination</h2>
           
-          <p>We reserve the right to terminate or suspend your account and access to the service at our sole discretion, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+          <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
         </div>
       </div>
     </div>

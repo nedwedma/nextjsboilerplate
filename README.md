@@ -1,8 +1,6 @@
-# ⚡ Indieboilerplate
+# ⚡ Next.js Boilerplate
 
-Hi there! 👋
-
-Indieboilerplate is a modern Next.js boilerplate designed to help indie hackers and developers launch their applications faster. It's built with Next.js 16, better-auth, Prisma ORM 7, Tailwind CSS 4 and shadcn/ui on Base UI.
+A modern Next.js boilerplate to launch new applications faster. It's built with Next.js 16, better-auth, Prisma ORM 7, Tailwind CSS 4 and shadcn/ui on Base UI.
 
 ## Features
 
@@ -51,6 +49,8 @@ Indieboilerplate is a modern Next.js boilerplate designed to help indie hackers 
    ```bash
    npm run dev
    ```
+
+6. Make it your own: set app name, description, contact email and repository URL in `src/lib/site-config.ts`, replace `public/logo.svg`, and replace the Lorem ipsum texts in `/tos` and `/privacy-policy` with your legal texts.
 
 ## Scripts
 

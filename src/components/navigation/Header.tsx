@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Navigation from "./Navigation";
 import MobileMenu from "./MobileMenu";
+import { siteConfig } from "@/src/lib/site-config";
 
 export default function Header() {
   return (
@@ -11,12 +12,12 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/logo.svg"
-              alt="Boilerplage Logo"
+              alt={`${siteConfig.name} Logo`}
               width={40}
               height={40}
               className="h-10 w-10"
             />
-            <span className="text-lg font-semibold text-gray-800">Boilerplate</span>
+            <span className="text-lg font-semibold text-gray-800">{siteConfig.name}</span>
           </Link>
         </div>
 

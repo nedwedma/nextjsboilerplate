@@ -1,5 +1,6 @@
 // components/SEO.tsx
 import { Metadata } from "next";
+import { siteConfig } from "@/src/lib/site-config";
 
 interface SEOProps {
   title: string;
@@ -26,7 +27,7 @@ export function generateMetadata({
       title,
       description,
       url: canonicalUrl,
-      siteName: "Your Site Name",
+      siteName: siteConfig.name,
       images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
       type: ogType,
     },

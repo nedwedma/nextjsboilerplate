@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Zap } from "lucide-react";
+import { siteConfig } from "@/src/lib/site-config";
 
 export default function CTA() {
   return (
@@ -19,7 +20,7 @@ export default function CTA() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="https://github.com/antimetal/nextjs-boilerplate"
+            href={siteConfig.repoUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-md bg-[#e9ff1a] px-6 py-3 text-base font-medium text-gray-900 transition-colors hover:bg-[#d9ef0a]"

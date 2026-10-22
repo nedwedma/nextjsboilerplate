@@ -1,9 +1,10 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { siteConfig } from "@/src/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Documentation | Indieboilerplate",
-  description: "Documentation and guides for the Indieboilerplate",
+  title: `Documentation | ${siteConfig.name}`,
+  description: `Documentation and guides for ${siteConfig.name}`,
 };
 
 export default function DocsPage() {
@@ -16,7 +17,7 @@ export default function DocsPage() {
             Documentation
           </h1>
           <p className="text-gray-600 max-w-3xl">
-            Welcome to the Indieboilerplate documentation. Here you&apos;ll find comprehensive guides and documentation to help you get started with the Indieboilerplate as quickly as possible.
+            Welcome to the {siteConfig.name} documentation. Here you&apos;ll find guides to help you get started as quickly as possible.
           </p>
         </div>
 
@@ -25,14 +26,14 @@ export default function DocsPage() {
           <Link href="/docs/getting-started" className="group">
             <div className="border border-gray-200 rounded-lg p-6 hover:border-blue-500 hover:shadow-md transition">
               <h2 className="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-600 transition">Getting Started</h2>
-              <p className="text-gray-600">Learn how to set up and run the Indieboilerplate for your project.</p>
+              <p className="text-gray-600">Learn how to set up and run the boilerplate for your project.</p>
             </div>
           </Link>
           
           <Link href="/docs/architecture" className="group">
             <div className="border border-gray-200 rounded-lg p-6 hover:border-blue-500 hover:shadow-md transition">
               <h2 className="text-xl font-bold mb-3 text-gray-800 group-hover:text-blue-600 transition">Architecture</h2>
-              <p className="text-gray-600">Understand the architecture and structure of the Indieboilerplate.</p>
+              <p className="text-gray-600">Understand the architecture and structure of the boilerplate.</p>
             </div>
           </Link>
           
@@ -75,7 +76,7 @@ export default function DocsPage() {
                 Check out the source code and contribute to the project on GitHub.
               </p>
               <a 
-                href="https://github.com/nedwedma/nextjsboilerplate" 
+                href={siteConfig.repoUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 font-medium transition"
