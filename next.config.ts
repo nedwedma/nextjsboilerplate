@@ -1,9 +1,18 @@
-import { NextConfig } from "next";
+import type { NextConfig } from "next";
 
 const nextConfig = {
-  eslint: { ignoreDuringBuilds: false },
   typescript: { ignoreBuildErrors: false },
   pageExtensions: ["ts", "tsx", "mdx"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: process.env.CLOUDFRONT_DOMAIN || "*.cloudfront.net",
+      },
+      { protocol: "https", hostname: "fal.media" },
+      { protocol: "https", hostname: "*.fal.media" },
+    ],
+  },
   async headers() {
     return [
       {

@@ -2,10 +2,13 @@ import UsersTable from "@/src/components/admin/users-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
 import Header from "@/src/components/navigation/Header";
 import prisma from "@/src/lib/prisma";
+import { requireAdmin } from "@/src/lib/dal";
 import Link from "next/link";
 import { Users, Images, ArrowRight } from "lucide-react";
 
 export default async function AdminDashboard() {
+	await requireAdmin();
+
 	const users = await prisma.user.findMany({
 		select: {
 			id: true,

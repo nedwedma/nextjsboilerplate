@@ -174,11 +174,13 @@ export default function AIImageGenerator({ onImageGenerated }: AIImageGeneratorP
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
-              <div className="aspect-video w-full max-w-2xl mx-auto">
+              <div className="relative aspect-video w-full max-w-2xl mx-auto">
                 <Image
                   src={generatedImage.url}
                   alt={generatedImage.prompt}
-                  className="w-full h-full object-contain rounded-lg border"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 672px"
+                  className="object-contain rounded-lg border"
                 />
               </div>
               
