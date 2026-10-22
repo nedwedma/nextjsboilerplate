@@ -43,5 +43,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# prisma client (generated on postinstall)
+/src/generated/
+
 #drizzle 
 /drizzle
