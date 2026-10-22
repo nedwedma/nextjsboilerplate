@@ -31,7 +31,7 @@ export default function ForgotPassword() {
 		}
 
 		setIsPending(true);
-		const { error } = await authClient.forgetPassword({
+		const { error } = await authClient.requestPasswordReset({
 			email: validationResult.data.email,
 			redirectTo: "/reset-password",
 		});

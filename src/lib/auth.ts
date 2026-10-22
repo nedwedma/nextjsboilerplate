@@ -34,11 +34,11 @@ export const auth = betterAuth({
     },
     changeEmail: {
       enabled: true,
-      sendChangeEmailVerification: async ({ newEmail, url }) => {
+      sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
         await sendEmail({
-          to: newEmail,
-          subject: 'Verify your email change',
-          text: `Click the link to verify: ${url}`
+          to: user.email,
+          subject: 'Confirm your email change',
+          text: `Click the link to confirm changing your email to ${newEmail}: ${url}`
         })
       }
     }

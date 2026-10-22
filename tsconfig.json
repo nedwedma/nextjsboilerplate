@@ -33,8 +33,7 @@
       ],
       "@root/*": ["./*"],
       "@/src/*": ["./src/*"]
-    },
-    "baseUrl": "."
+    }
   },
   "include": [
     "next-env.d.ts",
