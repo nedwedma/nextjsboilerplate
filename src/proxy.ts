@@ -1,44 +1,27 @@
-import { betterFetch } from "@better-fetch/fetch";
+import { getSessionCookie } from "better-auth/cookies";
 import { NextResponse, type NextRequest } from "next/server";
-import type { Session } from "@/src/lib/auth";
 
-const authRoutes = ["/sign-in", "/sign-up"];
-const protectedRoutes = ["/dashboard", "/profile", "/settings"];
+const protectedPrefixes = ["/dashboard", "/profile", "/settings", "/admin"];
 
-export async function proxy(request: NextRequest) {
-  const pathName = request.nextUrl.pathname;
-  const isAuthRoute = authRoutes.includes(pathName);
-  const isAdminRoute = pathName.startsWith("/admin");
-  const isProtectedRoute = protectedRoutes.includes(pathName);
-
-  const { data: session } = await betterFetch<Session>(
-    "/api/auth/get-session",
-    {
-      baseURL: process.env.BETTER_AUTH_URL,
-      headers: {
-        cookie: request.headers.get("cookie") || "",
-      },
-    },
+// Optimistic check only (cookie presence). Session validity and roles are
+// enforced in the DAL (src/lib/dal.ts) via requireAuth()/requireAdmin().
+// Auth routes are intentionally not redirected here: a stale cookie would
+// otherwise make /sign-in unreachable.
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+  const isProtectedRoute = protectedPrefixes.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
   );
 
-  if (!session) {
-    if (isProtectedRoute) {
-      return NextResponse.redirect(new URL("/sign-in?callbackUrl=" + encodeURIComponent(request.url), request.url));
-    }
-    return NextResponse.next();
-  }
-
-  if (isAuthRoute) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  if (isAdminRoute && session.user.role !== "admin") {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (isProtectedRoute && !getSessionCookie(request)) {
+    const signInUrl = new URL("/sign-in", request.url);
+    signInUrl.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(signInUrl);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

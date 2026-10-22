@@ -3,15 +3,7 @@ import { prismaAdapter } from "@better-auth/prisma-adapter";
 import prisma from "@/src/lib/prisma";
 import { openAPI } from "better-auth/plugins";
 import { admin } from "better-auth/plugins";
-
-async function sendEmail(params: { to: string; subject: string; text?: string; html?: string }) {
-  const response = await fetch(`${process.env.BETTER_AUTH_URL}/api/email`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(params),
-  });
-  if (!response.ok) throw new Error('Failed to send email');
-}
+import { sendEmail } from "@/src/lib/email";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {

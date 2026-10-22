@@ -1,6 +1,9 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
+// Objects are uploaded without ACLs: new buckets enforce "Bucket owner enforced"
+// (ACLs disabled), so public read access must come from a bucket policy or
+// CloudFront Origin Access Control.
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
   credentials: {
@@ -20,7 +23,6 @@ export async function generatePresignedUploadUrl(key: string, contentType: strin
     Bucket: s3Config.bucket,
     Key: key,
     ContentType: contentType,
-    ACL: 'public-read',
   });
 
   const presignedUrl = await getSignedUrl(s3Client, command, {
@@ -49,7 +51,6 @@ export async function uploadToS3(buffer: Buffer, key: string, contentType: strin
     Key: key,
     Body: buffer,
     ContentType: contentType,
-    ACL: 'public-read',
   });
 
   await s3Client.send(command);
