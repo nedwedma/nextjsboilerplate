@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { XMarkIcon, Bars3Icon } from '@heroicons/react/24/outline'
+import { Menu, X } from 'lucide-react'
 import { authClient } from "@/src/lib/auth-client"; 
 import { useRouter } from 'next/navigation';
 
@@ -44,9 +44,9 @@ export default function MobileMenu() {
     <div className="md:hidden"> {/* Only show on mobile */} 
       <button onClick={toggleMenu} className="text-gray-700">
         {isMenuOpen ? (
-          <XMarkIcon className="h-6 w-6" />
+          <X className="h-6 w-6" />
         ) : (
-          <Bars3Icon className="h-6 w-6" />
+          <Menu className="h-6 w-6" />
         )}
       </button>
 
@@ -61,7 +61,7 @@ export default function MobileMenu() {
       >
         <div className="p-4">
           <button onClick={closeMenu} className="absolute top-4 right-4 text-gray-700">
-            <XMarkIcon className="h-6 w-6" />
+            <X className="h-6 w-6" />
           </button>
 
           <nav className="mt-16 flex flex-col gap-4">

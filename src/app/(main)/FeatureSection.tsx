@@ -100,7 +100,7 @@ export default function FeatureSection() {
               <ul className="space-y-3 mt-4">
                 {feature.details.map((detail, detailIndex) => (
                   <li key={detailIndex} className="flex items-start gap-2">
-                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                     <div>
                       <span className="font-medium text-gray-800">{detail.name}</span>
                       <p className="text-sm text-gray-600">{detail.description}</p>

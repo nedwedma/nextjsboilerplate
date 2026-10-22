@@ -55,7 +55,7 @@ export default function FeaturedTime() {
         {/* Features grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {features.map((feature, index) => (
-            <div key={index} className="bg-[#f8fafc] p-6 rounded-lg border border-gray-100 shadow-sm">
+            <div key={index} className="bg-[#f8fafc] p-6 rounded-lg border border-gray-100 shadow-xs">
               <div className="flex items-start gap-3">
                 <div className="bg-[#e6f2ff] p-2 rounded-md">
                   <Check className="w-5 h-5 text-blue-600" />

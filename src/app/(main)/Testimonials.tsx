@@ -91,7 +91,7 @@ export default function TestimonialsPage() {
                 </div>
               )}
 
-              <p className="text-gray-700 mb-6 flex-grow text-lg leading-relaxed">
+              <p className="text-gray-700 mb-6 grow text-lg leading-relaxed">
                 &quot;{testimonial.text}&quot;
               </p>
 
@@ -115,7 +115,7 @@ export default function TestimonialsPage() {
           {regularTestimonials.map((testimonial, index) => (
             <div 
               key={`regular-${index}`}
-              className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 flex flex-col h-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+              className="bg-white rounded-lg shadow-xs p-6 border border-gray-100 flex flex-col h-full transition-all duration-300 hover:shadow-md hover:-translate-y-1"
             >
               {testimonial.rating && (
                 <div className="flex gap-1 mb-3">
@@ -128,7 +128,7 @@ export default function TestimonialsPage() {
                 </div>
               )}
 
-              <p className="text-gray-700 mb-4 flex-grow">
+              <p className="text-gray-700 mb-4 grow">
                 &quot;{testimonial.text}&quot;
               </p>
 

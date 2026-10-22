@@ -23,7 +23,7 @@ export default function PricingSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Starter Plan */}
-          <div className="rounded-xl bg-white p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative flex flex-col h-full">
+          <div className="rounded-xl bg-white p-8 border border-gray-200 shadow-xs hover:shadow-md transition-shadow relative flex flex-col h-full">
             <h3 className="text-xl font-bold mb-4 text-gray-800">Starter</h3>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -35,7 +35,7 @@ export default function PricingSection() {
               </p>
             </div>
 
-            <div className="space-y-4 mb-8 flex-grow">
+            <div className="space-y-4 mb-8 grow">
               <Feature>Next.js boilerplate</Feature>
               <Feature>Basic SEO setup</Feature>
               <Feature>Email templates</Feature>
@@ -73,7 +73,7 @@ export default function PricingSection() {
               </p>
             </div>
 
-            <div className="space-y-4 mb-8 flex-grow">
+            <div className="space-y-4 mb-8 grow">
               <Feature highlighted>Everything in Starter</Feature>
               <Feature highlighted>Advanced SEO optimization</Feature>
               <Feature highlighted>Maileroo integration</Feature>
@@ -95,7 +95,7 @@ export default function PricingSection() {
           </div>
 
           {/* Enterprise Plan */}
-          <div className="rounded-xl bg-white p-8 border border-gray-200 shadow-sm hover:shadow-md transition-shadow relative flex flex-col h-full">
+          <div className="rounded-xl bg-white p-8 border border-gray-200 shadow-xs hover:shadow-md transition-shadow relative flex flex-col h-full">
             <h3 className="text-xl font-bold mb-4 text-gray-800">Enterprise</h3>
             <div className="mb-6">
               <div className="flex items-baseline gap-1">
@@ -107,7 +107,7 @@ export default function PricingSection() {
               </p>
             </div>
 
-            <div className="space-y-4 mb-8 flex-grow">
+            <div className="space-y-4 mb-8 grow">
               <Feature>Everything in Pro</Feature>
               <Feature>Custom branding</Feature>
               <Feature>Advanced analytics</Feature>
@@ -144,7 +144,7 @@ export default function PricingSection() {
 function Feature({ children, highlighted = false }: { children: React.ReactNode; highlighted?: boolean }) {
   return (
     <div className="flex items-start gap-3">
-      <Check className={`w-5 h-5 ${highlighted ? 'text-blue-500' : 'text-gray-500'} flex-shrink-0`} />
+      <Check className={`w-5 h-5 ${highlighted ? 'text-blue-500' : 'text-gray-500'} shrink-0`} />
       <span className={`${highlighted ? 'text-gray-800' : 'text-gray-600'}`}>{children}</span>
     </div>
   );

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
 import { Input } from "@/src/components/ui/input";
+import { Textarea } from "@/src/components/ui/textarea";
 import { Label } from "@/src/components/ui/label";
 import { Button } from "@/src/components/ui/button";
 import { Loader2 } from "lucide-react";
@@ -114,13 +115,12 @@ export default function ContactForm() {
 
           <div className="grid gap-2">
             <Label htmlFor="message">Message</Label>
-            <textarea
+            <Textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
               disabled={isSubmitting}
-              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               placeholder="Your message"
               rows={4}
             />

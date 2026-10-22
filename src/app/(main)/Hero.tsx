@@ -66,7 +66,7 @@ const HeroSection = () => {
                   <span className="text-blue-400">export default function</span> <span className="text-yellow-300">Home</span>() &#123;{"\n"}
                   {"  "}<span className="text-blue-400">return</span> ({"\n"}
                   {"    "}&lt;<span className="text-yellow-300">div</span> <span className="text-purple-400">className</span>=<span className="text-green-400">min-h-screen flex flex-col</span>&gt;{"\n"}
-                  {"      "}&lt;<span className="text-yellow-300">main</span> <span className="text-purple-400">className</span>=<span className="text-green-400">flex-grow</span>&gt;{"\n"}
+                  {"      "}&lt;<span className="text-yellow-300">main</span> <span className="text-purple-400">className</span>=<span className="text-green-400">grow</span>&gt;{"\n"}
                   {"        "}<span className="text-gray-400">&#123;/* Your content here */&#125;</span>{"\n"}
                   {"      "}&lt;/<span className="text-yellow-300">main</span>&gt;{"\n"}
                   {"    "}&lt;/<span className="text-yellow-300">div</span>&gt;{"\n"}

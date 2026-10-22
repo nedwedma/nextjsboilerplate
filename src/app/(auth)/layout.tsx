@@ -10,7 +10,7 @@ export default async function AuthLayout({
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow flex items-center justify-center bg-gray-50 py-12">
+      <main className="grow flex items-center justify-center bg-gray-50 py-12">
         {children}
       </main>
       <Footer />

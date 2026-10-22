@@ -155,7 +155,7 @@ export default function FeaturesSection() {
                 <TabsTrigger
                   key={feature.id}
                   value={feature.id}
-                  className="flex flex-col items-center gap-2 p-4 data-[state=active]:bg-zinc-800 rounded-lg"
+                  className="flex flex-col items-center gap-2 p-4 data-active:bg-zinc-800 rounded-lg"
                 >
                   <Icon className="w-6 h-6" />
                   <span className="text-sm">{feature.label}</span>
@@ -173,7 +173,7 @@ export default function FeaturesSection() {
               <div className="space-y-6">
                 {feature.content.features.map((item, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
+                    <Check className="w-5 h-5 text-green-500 mt-1 shrink-0" />
                     <span className="text-lg text-gray-300">{item}</span>
                   </div>
                 ))}
